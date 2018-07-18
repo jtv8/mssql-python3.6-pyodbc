@@ -1,6 +1,6 @@
-# mssql-python3.6-pyodbc
+# mssql-python3-pyodbc
 # Python runtime with pyodbc to connect to SQL Server
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # apt-get and system utilities
 RUN apt-get update && apt-get install -y \
@@ -9,10 +9,10 @@ RUN apt-get update && apt-get install -y \
 
 # adding custom MS repository
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 # install SQL Server drivers
-RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql unixodbc-dev
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
 
 # install SQL Server tools
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y mssql-tools
@@ -20,29 +20,19 @@ RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 RUN /bin/bash -c "source ~/.bashrc"
 
 # python libraries
-RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y \
-    python3.6 \
+    python3-pip python3-dev python3-setuptools \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
-    
-# install pip
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python3.6 get-pip.py
-
-# set pip3 and python3.6 to default
-RUN ln -s /usr/bin/python3.6 /usr/local/bin/python3
-RUN ln -s /usr/local/bin/pip /usr/local/bin/pip3
 
 # install necessary locales
 RUN apt-get update && apt-get install -y locales \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen
-RUN pip install --upgrade pip
-RUN pip install setuptools==3.6
+RUN pip3 install --upgrade pip
 
 # install SQL Server Python SQL Server connector module - pyodbc
-RUN pip install pyodbc
+RUN pip3 install pyodbc
 
 # install additional utilities
 RUN apt-get update && apt-get install gettext nano vim -y
