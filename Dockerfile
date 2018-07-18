@@ -1,4 +1,4 @@
-# mssql-python3-pyodbc
+# mssql-python3.6-pyodbc
 # Python runtime with pyodbc to connect to SQL Server
 FROM ubuntu:18.04
 
