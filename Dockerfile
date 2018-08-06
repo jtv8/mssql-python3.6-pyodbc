@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/ubuntu/18.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
+# install libssl - required for sqlcmd to work on Ubuntu 18.04
+RUN apt-get update && apt-get install -y libssl1.0.0 libssl-dev
+
 # install SQL Server drivers
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
 
